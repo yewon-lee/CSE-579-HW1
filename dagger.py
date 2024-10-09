@@ -9,13 +9,12 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 def simulate_policy_dagger(env, policy, expert_paths, expert_policy=None, num_epochs=500, episode_length=50,
                             batch_size=32, num_dagger_iters=10, num_trajs_per_dagger=10):
     
-    #========== TODO: begin ==========
-    # Fill in your dagger implementation here. 
     
+    # Fill in your dagger implementation here. 
     # Hint: Loop through num_dagger_iters iterations, at each iteration train a policy on the current dataset.
     # Then rollout the policy, use relabel_action to relabel the actions along the trajectory with "expert_policy" and then add this to current dataset
     # Repeat this so the dataset grows with states drawn from the policy, and relabeled actions using the expert.
-    #========== TODO: end ==========
+    
     
     # Optimizer code
     optimizer = optim.Adam(list(policy.parameters()))
@@ -33,9 +32,10 @@ def simulate_policy_dagger(env, policy, expert_paths, expert_policy=None, num_ep
             running_loss = 0.0
             for i in range(num_batches):
                 optimizer.zero_grad()
-                # TODO start: Fill in your behavior cloning implementation here
+                #========== TODO: begin ==========
+                # Fill in your behavior cloning implementation here
 
-                # TODO end
+                #========== TODO: end ==========
                 loss.backward()
                 optimizer.step()
 
