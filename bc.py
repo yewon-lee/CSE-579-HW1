@@ -28,5 +28,5 @@ def simulate_policy_bc(env, policy, expert_data, num_epochs=500, episode_length=
             running_loss += loss.item()
         # if epoch % 10 == 0:
         print('[%d] loss: %.8f' %
-            (epoch, running_loss / 10.))
+            (epoch, running_loss / num_batches))
         losses.append(loss.item())
