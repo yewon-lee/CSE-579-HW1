@@ -117,17 +117,6 @@ class PolicyAutoRegressiveModel(nn.Module):
             #========== TODO: end ==========
 
         return log_prob
-
-def rollout(
-        env,
-        agent,
-        agent_name, # Should be bc, dagger, pg, or diffusion
-        episode_length=math.inf,
-        render=False,
-):
-    if agent_name == "diffusion":
-        return rollout_diffusion(env, agent, episode_length, render)
-
     
 def rollout(
         env,
