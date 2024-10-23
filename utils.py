@@ -98,7 +98,22 @@ class PolicyAutoRegressiveModel(nn.Module):
             # Sample from this distribution and get that sample's log probability. Add the log probability
             # to the running log_probs and undiscretize the sample add append it to vals.
             # Important - use previous *sampled* actions
-            continue # TODO: Remove this when running
+            # continue # TODO: Remove this when running
+
+            if j == 0:
+                input_state = state  # First action is based only on state
+            else:
+                prev_ac = torch.cat(vals, dim=-1)
+                input_state = torch.cat([state, prev_ac], dim=-1)
+
+            logits = self.trunks[j](input_state)
+            dist = torch.distributions.Categorical(logits=logits)
+            ac_sample = dist.sample()
+            log_probs += dist.log_prob(ac_sample)
+
+            continuous_action = self.undiscretize(ac_sample, j)
+            vals.append(continuous_action.unsqueeze(-1))
+
             #========== TODO: end ==========
         vals = torch.cat(vals, dim=-1)
         return vals, log_probs
@@ -113,7 +128,19 @@ class PolicyAutoRegressiveModel(nn.Module):
             # the respective MLP (i.e. self.trunks[j]) to get a logit. Use the logit to create a categorical distribution.
             # Get the log prob of the respective discretized action (i.e. ac_discretized[:, j]) and add it to the running log_prob.
             # Important - use previous actions from the action variable, *not* sampled actions
-            continue # TODO: Remove this when running
+            # continue # TODO: Remove this when running
+
+            if j == 0:
+                input_state = state
+            else:
+                prev_actions = action[:, :j]
+                input_state = torch.cat([state, prev_actions], dim=-1)
+
+            logits = self.trunks[j](input_state)
+            dist = torch.distributions.Categorical(logits=logits)
+
+            log_prob += dist.log_prob(ac_discretized[:, j])
+
             #========== TODO: end ==========
 
         return log_prob
